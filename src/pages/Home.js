@@ -9,7 +9,6 @@ const Home = () => {
   const { selectedDate, setSelectedDate } = useAppContext();
   return (
     <Container className="py-4">
-      <h2 className="text-center">React Calendar Todo App</h2>
       <Row className="py-4">
         <Col xs={12} md={4}>
           <Calendar
