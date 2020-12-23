@@ -3,7 +3,6 @@ import { Col, Container, Row } from "react-bootstrap";
 import Calendar from "react-calendar";
 import { useAppContext } from "../AppContext";
 import AddTodoForm from "../components/AddTodoForm";
-import TodoList from "../components/TodoList";
 
 const Home = () => {
   const { selectedDate, setSelectedDate } = useAppContext();
@@ -21,7 +20,6 @@ const Home = () => {
           <AddTodoForm />
         </Col>
       </Row>
-      <TodoList />
     </Container>
   );
 };

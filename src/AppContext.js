@@ -8,31 +8,22 @@ export function useAppContext() {
 export function AppContextProvider({ children }) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [todoArr, setTodoArr] = useState([]);
+  const [state, setState] = useState({});
+
   const handelAddTodo = (todoTxt, time) => {
-    const arr = [];
-    arr.push(...todoArr);
+    const data = { ...state };
     const newTodoItem = {
       todoTxt,
       time,
-      selectedDate: selectedDate.toLocaleDateString(),
     };
-    arr.push(newTodoItem);
-    localStorage.setItem(
-      selectedDate.toLocaleDateString(),
-      JSON.stringify(arr)
-    );
-    setTodoArr(arr);
+    if (data[selectedDate.toLocaleDateString()]) {
+      data[selectedDate.toLocaleDateString()].push(newTodoItem);
+    } else {
+      data[selectedDate.toLocaleDateString()] = [newTodoItem];
+    }
+    setState(data);
   };
-  const deleteTodo = (i) => {
-    const arr = [];
-    arr.push(...todoArr);
-    arr.splice(i, 1);
-    localStorage.setItem(
-      selectedDate.toLocaleDateString(),
-      JSON.stringify(arr)
-    );
-    setTodoArr(arr);
-  };
+
   useEffect(() => {
     const selectedDateTodoArr = JSON.parse(
       localStorage.getItem(selectedDate.toLocaleDateString())
@@ -46,7 +37,8 @@ export function AppContextProvider({ children }) {
     setSelectedDate,
     todoArr,
     setTodoArr,
-    deleteTodo,
+    state,
+    setState,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
