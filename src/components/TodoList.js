@@ -3,7 +3,7 @@ import { Badge, Button, ListGroup } from "react-bootstrap";
 import { useAppContext } from "../AppContext";
 
 const TodoList = () => {
-  const { selectedDate, todoArr } = useAppContext();
+  const { selectedDate, todoArr, deleteTodo } = useAppContext();
   return (
     <ListGroup>
       <ListGroup.Item
@@ -12,7 +12,7 @@ const TodoList = () => {
       >
         Todos For {selectedDate.toDateString()}
         <Button variant="outline-light">
-          Sort by time
+          Sort
           <i className="fas fa-sort ml-1"></i>
         </Button>
       </ListGroup.Item>
@@ -27,12 +27,17 @@ const TodoList = () => {
             <Button variant="info" className="mx-2">
               <i className="fas fa-edit"></i>
             </Button>
-            <Button variant="danger">
+            <Button variant="danger" onClick={() => deleteTodo(i)}>
               <i className="fas fa-trash"></i>
             </Button>
           </div>
         </ListGroup.Item>
       ))}
+      {!todoArr.length && (
+        <ListGroup.Item className="text-center">
+          No Todo Found For Today
+        </ListGroup.Item>
+      )}
     </ListGroup>
   );
 };

@@ -9,10 +9,21 @@ const AddTodoForm = () => {
   const [time, setTime] = useState("");
   const onSubmit = (e) => {
     e.preventDefault();
-    handelAddTodo(todoTxt, time);
+    handelAddTodo(todoTxt, make12hr(time));
     setTodoTxt("");
     setTime("");
   };
+
+  const make12hr = (time) => {
+    const timeString12hr = new Date(
+      "1970-01-01T" + time + "Z"
+    ).toLocaleTimeString(
+      {},
+      { timeZone: "UTC", hour12: true, hour: "numeric", minute: "numeric" }
+    );
+    return timeString12hr;
+  };
+
   return (
     <Form className="card card-body" onSubmit={onSubmit}>
       <h4>Add Todo For {selectedDate.toDateString()} </h4>
