@@ -8,6 +8,7 @@ export function useAppContext() {
 export function AppContextProvider({ children }) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [allTodo, setAllTodo] = useState({});
+  const [allTodoArr, setAllTodoArr] = useState([]);
 
   // Utility Function For Time Formatting With AM / PM
   const make12hr = (time) => {
@@ -65,9 +66,24 @@ export function AppContextProvider({ children }) {
     localStorage.setItem("AllTodo", JSON.stringify(data));
   };
 
+  // Convert Todo Object To Array
+  const getTodoArr = () => {
+    const arr = [];
+    for (const date in allTodo) {
+      for (const key in allTodo[date]) {
+        arr.push({ date, ...allTodo[date][key], key });
+      }
+    }
+    return arr;
+  };
+
   useEffect(() => {
     fetchAllLocalTodo();
   }, []);
+
+  useEffect(() => {
+    setAllTodoArr(getTodoArr());
+  }, [allTodo]);
 
   const value = {
     handelAddTodo,
@@ -79,6 +95,8 @@ export function AppContextProvider({ children }) {
     handelClearAll,
     deleteTodo,
     handleChanges,
+    allTodoArr,
+    setAllTodoArr,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

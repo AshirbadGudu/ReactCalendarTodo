@@ -2,40 +2,59 @@ import React from "react";
 import { Badge, Button, ListGroup } from "react-bootstrap";
 import { useAppContext } from "../AppContext";
 
-const TodoList = () => {
-  const { selectedDate, todoArr, deleteTodo } = useAppContext();
+const TodoList = ({ arr, handelClearAll, handelEdit, handelDelete }) => {
+  const { make12hr } = useAppContext();
+
   return (
     <ListGroup>
       <ListGroup.Item
         active
         className="d-flex justify-content-between align-items-center"
       >
-        Todos For {selectedDate.toDateString()}
-        <Button variant="outline-light">
-          Sort
-          <i className="fas fa-sort ml-1"></i>
-        </Button>
+        All Todo
+        <div>
+          <Button
+            className="mx-1"
+            variant="danger"
+            onClick={() => handelClearAll()}
+          >
+            Clear All
+            <i className="fas fa-times ml-1"></i>
+          </Button>
+        </div>
       </ListGroup.Item>
-      {todoArr.map((item, i) => (
+      {arr.map((todo, i) => (
         <ListGroup.Item
           key={i}
           className="d-flex justify-content-between align-items-center"
         >
-          {item.todoTxt}
+          <span>
+            {todo.todoTxt}
+            <br />
+            <small>{make12hr(todo.time)}</small>
+          </span>
           <div>
-            <Badge>{item.time}</Badge>
-            <Button variant="info" className="mx-2">
+            <Badge>{todo.date}</Badge>
+            <Button
+              className="mx-1"
+              variant="info"
+              onClick={() => handelEdit(todo)}
+            >
               <i className="fas fa-edit"></i>
             </Button>
-            <Button variant="danger" onClick={() => deleteTodo(i)}>
+            <Button
+              className="mx-1"
+              variant="danger"
+              onClick={() => handelDelete(todo)}
+            >
               <i className="fas fa-trash"></i>
             </Button>
           </div>
         </ListGroup.Item>
       ))}
-      {!todoArr.length && (
+      {!arr.length && (
         <ListGroup.Item className="text-center">
-          No Todo Found For Today
+          No Todo Found For Now
         </ListGroup.Item>
       )}
     </ListGroup>
