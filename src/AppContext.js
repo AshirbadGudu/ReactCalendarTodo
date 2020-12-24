@@ -7,9 +7,9 @@ export function useAppContext() {
 
 export function AppContextProvider({ children }) {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [todoArr, setTodoArr] = useState([]);
-  const [state, setState] = useState({});
+  const [allTodo, setAllTodo] = useState({});
 
+  // Utility Function For Time Formatting With AM / PM
   const make12hr = (time) => {
     const timeString12hr = new Date(
       "1970-01-01T" + time + "Z"
@@ -20,8 +20,9 @@ export function AppContextProvider({ children }) {
     return timeString12hr;
   };
 
+  // Handel Add Todo Functionality
   const handelAddTodo = (todoTxt, time) => {
-    const data = { ...state };
+    const data = { ...allTodo };
     const newTodoItem = {
       todoTxt,
       time,
@@ -31,25 +32,53 @@ export function AppContextProvider({ children }) {
     } else {
       data[selectedDate.toLocaleDateString()] = [newTodoItem];
     }
-    setState(data);
+    setAllTodo(data);
+    localStorage.setItem("AllTodo", JSON.stringify(data));
+  };
+
+  // Fetch All Todo From Local Storage
+  const fetchAllLocalTodo = () => {
+    JSON.parse(localStorage.getItem("AllTodo")) &&
+      setAllTodo(JSON.parse(localStorage.getItem("AllTodo")));
+  };
+
+  // Clear All Todo
+  const handelClearAll = () => {
+    setAllTodo({});
+    localStorage.removeItem("AllTodo");
+  };
+
+  // Handel Delete Todo Functionality
+  const deleteTodo = (todo) => {
+    const data = { ...allTodo };
+    data[todo.date].splice([todo.key], 1);
+    setAllTodo(data);
+    localStorage.setItem("AllTodo", JSON.stringify(data));
+  };
+
+  // Handel Todo Modifications
+  const handleChanges = (selectedTodo, selectedTodoTxt, selectedTodoTime) => {
+    const data = { ...allTodo };
+    data[selectedTodo.date][selectedTodo.key].todoTxt = selectedTodoTxt;
+    data[selectedTodo.date][selectedTodo.key].time = selectedTodoTime;
+    setAllTodo(data);
+    localStorage.setItem("AllTodo", JSON.stringify(data));
   };
 
   useEffect(() => {
-    const selectedDateTodoArr = JSON.parse(
-      localStorage.getItem(selectedDate.toLocaleDateString())
-    );
-    selectedDateTodoArr ? setTodoArr(selectedDateTodoArr) : setTodoArr([]);
-  }, [selectedDate]);
+    fetchAllLocalTodo();
+  }, []);
 
   const value = {
     handelAddTodo,
     selectedDate,
     setSelectedDate,
-    todoArr,
-    setTodoArr,
-    state,
-    setState,
+    allTodo,
+    setAllTodo,
     make12hr,
+    handelClearAll,
+    deleteTodo,
+    handleChanges,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

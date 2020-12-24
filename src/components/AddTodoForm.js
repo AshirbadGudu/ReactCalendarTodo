@@ -7,6 +7,7 @@ const AddTodoForm = () => {
 
   const [todoTxt, setTodoTxt] = useState("");
   const [time, setTime] = useState("");
+
   const onSubmit = (e) => {
     e.preventDefault();
     handelAddTodo(todoTxt, time);

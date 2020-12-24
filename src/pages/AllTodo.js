@@ -10,48 +10,37 @@ import {
 import { useAppContext } from "../AppContext";
 
 const AllTodo = () => {
-  const { state, setState } = useAppContext();
+  const {
+    allTodo,
+    make12hr,
+    handelClearAll,
+    deleteTodo,
+    handleChanges,
+  } = useAppContext();
   const [allTodoArr, setAllTodoArr] = useState([]);
   const [selectedTodoTxt, setSelectedTodoTxt] = useState("");
   const [selectedTodoTime, setSelectedTodoTime] = useState("");
   const [selectedTodo, setSelectedTodo] = useState({});
   useEffect(() => {
     const arr = [];
-    for (const date in state) {
-      for (const key in state[date]) {
-        arr.push({ date, ...state[date][key], key });
+    for (const date in allTodo) {
+      for (const key in allTodo[date]) {
+        arr.push({ date, ...allTodo[date][key], key });
       }
     }
     setAllTodoArr(arr);
-  }, [state]);
-
-  const handelClearAll = () => {
-    setState({});
-  };
+  }, [allTodo]);
 
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const deleteTodo = (todo) => {
-    const newState = { ...state };
-    newState[todo.date].splice([todo.key], 1);
-    setState(newState);
-  };
   const editTodo = (todo) => {
     setSelectedTodoTxt(todo.todoTxt);
     setSelectedTodoTime(todo.time);
     setSelectedTodo(todo);
     handleShow();
-  };
-  const handleChanges = (e) => {
-    e.preventDefault();
-    const newState = { ...state };
-    newState[selectedTodo.date][selectedTodo.key].todoTxt = selectedTodoTxt;
-    newState[selectedTodo.date][selectedTodo.key].time = selectedTodoTime;
-    setState(newState);
-    handleClose();
   };
 
   return (
@@ -61,7 +50,14 @@ const AllTodo = () => {
           <Modal.Title>Edit Todo</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form className="card card-body" onSubmit={handleChanges}>
+          <Form
+            className="card card-body"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleChanges(selectedTodo, selectedTodoTxt, selectedTodoTime);
+              handleClose();
+            }}
+          >
             <Form.Group controlId="formBasicEmail">
               <Form.Label>Enter Todo Text</Form.Label>
               <Form.Control
@@ -118,14 +114,22 @@ const AllTodo = () => {
             <span>
               {todo.todoTxt}
               <br />
-              <small>{todo.time}</small>
+              <small>{make12hr(todo.time)}</small>
             </span>
             <div>
               <Badge>{todo.date}</Badge>
-              <Button variant="info" onClick={() => editTodo(todo)}>
+              <Button
+                className="mx-1"
+                variant="info"
+                onClick={() => editTodo(todo)}
+              >
                 <i className="fas fa-edit"></i>
               </Button>
-              <Button variant="danger" onClick={() => deleteTodo(todo)}>
+              <Button
+                className="mx-1"
+                variant="danger"
+                onClick={() => deleteTodo(todo)}
+              >
                 <i className="fas fa-trash"></i>
               </Button>
             </div>
