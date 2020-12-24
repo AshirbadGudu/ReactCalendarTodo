@@ -10,6 +10,16 @@ export function AppContextProvider({ children }) {
   const [todoArr, setTodoArr] = useState([]);
   const [state, setState] = useState({});
 
+  const make12hr = (time) => {
+    const timeString12hr = new Date(
+      "1970-01-01T" + time + "Z"
+    ).toLocaleTimeString(
+      {},
+      { timeZone: "UTC", hour12: true, hour: "numeric", minute: "numeric" }
+    );
+    return timeString12hr;
+  };
+
   const handelAddTodo = (todoTxt, time) => {
     const data = { ...state };
     const newTodoItem = {
@@ -39,6 +49,7 @@ export function AppContextProvider({ children }) {
     setTodoArr,
     state,
     setState,
+    make12hr,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

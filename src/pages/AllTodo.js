@@ -12,6 +12,8 @@ import { useAppContext } from "../AppContext";
 const AllTodo = () => {
   const { state, setState } = useAppContext();
   const [allTodoArr, setAllTodoArr] = useState([]);
+  const [selectedTodoTxt, setSelectedTodoTxt] = useState("");
+  const [selectedTodoTime, setSelectedTodoTime] = useState("");
   const [selectedTodo, setSelectedTodo] = useState({});
   useEffect(() => {
     const arr = [];
@@ -38,10 +40,19 @@ const AllTodo = () => {
     setState(newState);
   };
   const editTodo = (todo) => {
+    setSelectedTodoTxt(todo.todoTxt);
+    setSelectedTodoTime(todo.time);
     setSelectedTodo(todo);
     handleShow();
   };
-  console.log(selectedTodo);
+  const handleChanges = (e) => {
+    e.preventDefault();
+    const newState = { ...state };
+    newState[selectedTodo.date][selectedTodo.key].todoTxt = selectedTodoTxt;
+    newState[selectedTodo.date][selectedTodo.key].time = selectedTodoTime;
+    setState(newState);
+    handleClose();
+  };
 
   return (
     <Container className="py-4">
@@ -50,20 +61,26 @@ const AllTodo = () => {
           <Modal.Title>Edit Todo</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form className="card card-body" onSubmit={() => {}}>
+          <Form className="card card-body" onSubmit={handleChanges}>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>Enter Todo Text</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter Todo Text"
-                value={selectedTodo.todoTxt}
+                value={selectedTodoTxt}
+                onChange={(e) => setSelectedTodoTxt(e.target.value)}
                 required
               />
             </Form.Group>
 
             <Form.Group controlId="formBasicPassword">
               <Form.Label>Select Time</Form.Label>
-              <Form.Control type="time" value={selectedTodo.time} required />
+              <Form.Control
+                type="time"
+                value={selectedTodoTime}
+                onChange={(e) => setSelectedTodoTime(e.target.value)}
+                required
+              />
             </Form.Group>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleClose}>
