@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import { useAppContext } from "AppContext";
+import { EditTodoModal, TodoList } from "components";
+import { useState } from "react";
 import { Container } from "react-bootstrap";
-import { useAppContext } from "../AppContext";
-import EditTodoModal from "../components/EditTodoModal";
-import TodoList from "../components/TodoList";
 
 const AllTodo = () => {
   const { handelClearAll, deleteTodo, allTodoArr } = useAppContext();

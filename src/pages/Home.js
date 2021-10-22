@@ -1,8 +1,7 @@
-import React from "react";
+import { useAppContext } from "AppContext";
+import { AddTodoForm } from "components";
 import { Col, Container, Row } from "react-bootstrap";
 import Calendar from "react-calendar";
-import { useAppContext } from "../AppContext";
-import AddTodoForm from "../components/AddTodoForm";
 
 const Home = () => {
   const { selectedDate, setSelectedDate } = useAppContext();
