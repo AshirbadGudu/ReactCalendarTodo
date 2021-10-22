@@ -1,18 +1,13 @@
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import { AllTodo, Home } from "pages";
-import Header from "./components/Header";
+import withLayout from "layouts";
 const Router = () => {
   return (
-    <>
-      <BrowserRouter>
-        <Header />
-        <Switch>
-          <Route path="/" component={Home} exact />
-          <Route path="/AllTodo" component={AllTodo} exact />
-        </Switch>
-      </BrowserRouter>
-    </>
+    <Switch>
+      <Route path="/" component={Home} exact />
+      <Route path="/AllTodo" component={AllTodo} exact />
+    </Switch>
   );
 };
 
-export default Router;
+export default withLayout(Router);
